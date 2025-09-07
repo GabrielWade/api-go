@@ -4,6 +4,7 @@ import (
 	"api/app/infrastructure/config"
 	"api/app/interfaces/controller"
 	"log"
+	"os"
 
 	"github.com/joho/godotenv"
 )
@@ -19,5 +20,5 @@ func init() {
 
 func main() {
 	router := controller.NewRouter()
-	router.Run()
+	router.Run(":" + os.Getenv("APP_PORT"))
 }

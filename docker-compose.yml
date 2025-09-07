@@ -1,0 +1,24 @@
+services:
+  db:
+    build: ./containers
+    ports:
+      - 5432:5432
+    volumes:
+      - postgredata:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  web-api-go:
+    build: .
+    ports:
+      - 8080:8080
+    hostname: meuapp
+    depends_on:
+      - db
+
+volumes:
+  postgredata:
+
+networks:
+  app-rede:
+    external: true
