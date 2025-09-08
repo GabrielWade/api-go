@@ -30,7 +30,7 @@ func NewUserController(
 
 func (ctrl *UserController) RegisterRoutes(rg *gin.RouterGroup) {
 	rg.GET("/", middleware.CheckAuth, ctrl.GetUsers)
-	rg.POST("/", ctrl.CreateUser)
+	rg.POST("/", middleware.CheckAuth, ctrl.CreateUser)
 	rg.POST("/login", ctrl.LoginUser)
 }
 

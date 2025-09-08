@@ -1,24 +1,17 @@
-FROM golang:latest AS builder
+FROM golang:latest
+
+ENV PROJECT_DIR=/app \
+    GO111MODULE=on \
+    CGO_ENABLED=0
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
-
-RUN go mod download
+RUN mkdir "/build"
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o main .
+RUN go get github.com/githubnemo/CompileDaemon
 
-FROM alpine:latest 
+RUN go install github.com/githubnemo/CompileDaemon
 
-RUN apk --no-cache add ca-certificates
-
-WORKDIR /root/
-
-COPY --from=builder /app/main .
-COPY --from=builder /app/.env .env
-
-EXPOSE 8080
-
-CMD ["./main"]
+ENTRYPOINT CompileDaemon -build="go build -o /build/app -buildvcs=false" -command="/build/app"
